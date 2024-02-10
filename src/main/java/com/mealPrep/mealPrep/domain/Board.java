@@ -24,6 +24,6 @@ public class Board extends BaseEntity {
     @Column(columnDefinition = "integer default 0")
     private Long like;
 
-    @OneToMany(mappedBy = "image_id", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 }

@@ -31,10 +31,10 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "board_id")
     private List<Board> boards = new ArrayList<>();
 
-    @OneToMany(mappedBy = "from_user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
     private List<Follow> followings;
 
-    @OneToMany(mappedBy = "to_user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
     private List<Follow> followers;
 
     @Enumerated(EnumType.STRING)

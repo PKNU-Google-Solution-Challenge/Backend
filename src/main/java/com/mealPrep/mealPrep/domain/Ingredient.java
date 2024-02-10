@@ -1,6 +1,18 @@
 package com.mealPrep.mealPrep.domain;
 
-public class Ingredient {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
-    private String ingredient;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+public class Ingredient {
+    @Id @GeneratedValue
+    private Long id;
+
+    @OneToMany(mappedBy = "ingredient")
+    private List<RecipeIngredient> recipes = new ArrayList<>();
 }
