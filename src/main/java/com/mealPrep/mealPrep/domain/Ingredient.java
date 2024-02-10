@@ -14,5 +14,5 @@ public class Ingredient {
     private Long id;
 
     @OneToMany(mappedBy = "ingredient")
-    private List<RecipeIngredient> recipes = new ArrayList<>();
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 }

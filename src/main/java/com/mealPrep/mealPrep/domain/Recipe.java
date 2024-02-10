@@ -18,5 +18,5 @@ public class Recipe extends Board{
     private Long calorie;
 
     @OneToMany(mappedBy = "recipe",cascade = CascadeType.ALL)
-    private List<Ingredient> ingredients; // 이놈 굉장히 애매함 구조 잘 모르겠음
+    private List<RecipeIngredient> ingredients; // 이놈 굉장히 애매함 구조 잘 모르겠음
 }
