@@ -4,13 +4,14 @@ import com.mealPrep.mealPrep.domain.Enum.UserState;
 import com.mealPrep.mealPrep.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
-@Getter
+@Getter @Setter
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
