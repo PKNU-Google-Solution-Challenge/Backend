@@ -8,7 +8,7 @@ import lombok.Getter;
 public class BookMark {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bookmark_id")
     private Long id;
 

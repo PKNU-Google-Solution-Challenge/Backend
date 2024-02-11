@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class RecipeIngredient {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -16,3 +16,4 @@ public class RecipeIngredient {
     @JoinColumn(name="ingredient_id")
     private Ingredient ingredient;
 }
+
