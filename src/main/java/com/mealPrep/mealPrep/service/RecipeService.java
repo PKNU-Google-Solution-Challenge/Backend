@@ -22,6 +22,9 @@ import java.util.Optional;
 public class RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private MemberService memberService;
     @Autowired
     private IngredientRepository ingredientRepository;
     @Autowired
@@ -37,7 +40,7 @@ public class RecipeService {
         recipe.setCalorie(request.getTotalKcal());
 
         // 레시피 엔티티 저장
-        recipe = recipeRepository.save(recipe);
+        recipeRepository.save(recipe);
 
         // 재료 처리 및 RecipeIngredient 엔티티 생성
         List<RecipeIngredient> recipeIngredients = new ArrayList<>();
@@ -58,7 +61,7 @@ public class RecipeService {
     }
 
     @Transactional
-    private Ingredient getOrCreateIngredient(String ingredientName) {
+    public Ingredient getOrCreateIngredient(String ingredientName) {
         // 이름으로 기존 재료 찾기 시도
         Optional<Ingredient> existingIngredient = ingredientRepository.findByName(ingredientName);
 

@@ -1,4 +1,4 @@
-package com.mealPrep.mealPrep.Controller;
+package com.mealPrep.mealPrep.controller;
 
 import com.mealPrep.mealPrep.common.Response;
 import com.mealPrep.mealPrep.dto.RecipeWriteRequestDTO;
@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Configuration
@@ -20,11 +21,17 @@ public class RecipeController {
 
     @Operation(summary = "글 작성")
     @PostMapping("/recipe/write")
-    public ResponseEntity writeRecipe(@Valid @RequestBody RecipeWriteRequestDTO request){
-        System.out.println("===========" + request.getIngredients());
-        System.out.println("===========" + request.getTitle());
-        System.out.println("===========" + request.getTotalTime());
-        Long recipe = recipeService.createRecipe(request);
-        return new ResponseEntity(Response.success(recipe), HttpStatus.OK);
+    public ResponseEntity writeRecipe(@Validated @RequestBody RecipeWriteRequestDTO request){
+//        System.out.println("===========" + request.getIngredients());
+//        System.out.println("===========" + request.getTitle());
+//        System.out.println("===========" + request.getTotalTime());
+//
+//        Recipe recipe1 = new Recipe();
+//        recipe1.setCalorie(request.getTotalKcal());
+//
+//        System.out.println(recipe1.getCalorie());
+
+        Long recipes = recipeService.createRecipe(request);
+        return new ResponseEntity(Response.success(recipes), HttpStatus.OK);
     }
 }
