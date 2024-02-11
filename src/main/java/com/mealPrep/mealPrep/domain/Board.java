@@ -1,6 +1,6 @@
 package com.mealPrep.mealPrep.domain;
 
-import com.mealPrep.mealPrep.domain.common.BaseEntity;
+import com.mealPrep.mealPrep.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 

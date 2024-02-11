@@ -1,4 +1,4 @@
-package com.mealPrep.mealPrep.domain.common;
+package com.mealPrep.mealPrep.common;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
