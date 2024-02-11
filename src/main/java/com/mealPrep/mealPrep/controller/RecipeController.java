@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @Configuration
 @RestController
 @RequestMapping("/api/v1")
@@ -20,7 +18,7 @@ public class RecipeController {
     private final RecipeService recipeService;
     @Operation(summary = "글 작성")
     @PostMapping("/recipe/write")
-    public ResponseEntity writeRecipe(@RequestPart RecipeWriteRequestDTO request){
+    public ResponseEntity writeRecipe(@RequestBody RecipeWriteRequestDTO request){
         Long recipe = recipeService.createRecipe(request);
         return new ResponseEntity(Response.success(recipe), HttpStatus.OK);
     }

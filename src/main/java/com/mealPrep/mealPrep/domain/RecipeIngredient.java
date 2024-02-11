@@ -1,8 +1,12 @@
 package com.mealPrep.mealPrep.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@RequiredArgsConstructor
+@Setter
+@Getter
 public class RecipeIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
