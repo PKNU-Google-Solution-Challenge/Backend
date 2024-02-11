@@ -13,7 +13,7 @@ public class Board extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
-    private Long board_id;
+    private Long boardId;
 
     private String title;
     private String body;
@@ -22,8 +22,8 @@ public class Board extends BaseEntity {
     private Long view;
 
     @Column(columnDefinition = "integer default 0")
-    private Long like;
+    private Long likes;
 
-    @OneToMany(mappedBy = "image_id", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 }

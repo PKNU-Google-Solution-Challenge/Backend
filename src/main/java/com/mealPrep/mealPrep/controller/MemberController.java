@@ -2,27 +2,25 @@ package com.mealPrep.mealPrep.controller;
 
 import com.mealPrep.mealPrep.domain.Enum.UserState;
 import com.mealPrep.mealPrep.domain.Member;
+import com.mealPrep.mealPrep.exception.BusinessLogicException;
 import com.mealPrep.mealPrep.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
     @PostMapping("/sign-up")
-    public String signUp(@Validated MemberForm form, BindingResult result){
-
-        if(result.hasErrors()) {
-            return "redirect:/sign-up";
-        }
+    public ResponseEntity signUp(@Validated @RequestBody MemberForm form){
 
         Member member = new Member();
         member.setMember_id(form.getMember_id());
@@ -33,18 +31,22 @@ public class MemberController {
         member.setRegion(form.getRegion());
         member.setStatus(UserState.activate);
 
-        memberService.join(member);
-        return "redirect:/";
+        try {
+            ResponseEntity response = memberService.join(member);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusinessLogicException e) {
+            return new ResponseEntity<>(e.getExceptionCode(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/login")
-    public String login(@Validated LoginForm loginForm){
-
-        boolean equals = memberService.equals(loginForm);
-
-        return "redirect:/";
+    public ResponseEntity login(@Validated @RequestBody LoginForm loginForm) {
+        try {
+            ResponseEntity response = memberService.login(loginForm);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusinessLogicException e) {
+            return new ResponseEntity<>(e.getExceptionCode(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    private class LoginForm {
-    }
 }
