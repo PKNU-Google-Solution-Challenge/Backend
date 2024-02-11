@@ -1,4 +1,4 @@
-package com.mealPrep.mealPrep.Controller;
+package com.mealPrep.mealPrep.controller;
 
 import com.mealPrep.mealPrep.common.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
