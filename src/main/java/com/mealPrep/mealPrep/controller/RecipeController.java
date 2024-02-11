@@ -1,4 +1,4 @@
-package com.mealPrep.mealPrep.controller;
+package com.mealPrep.mealPrep.Controller;
 
 import com.mealPrep.mealPrep.common.Response;
 import com.mealPrep.mealPrep.dto.RecipeWriteRequestDTO;
