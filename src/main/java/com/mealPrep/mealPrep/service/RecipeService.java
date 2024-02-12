@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -95,7 +96,82 @@ public class RecipeService {
         for (Recipe recipe : orderByCreatedAtDesc) {
             RecipeViewDTO recipeViewDTO = new RecipeViewDTO();
             recipeViewDTO.setAuthor(recipe.getAuthor());
+            recipeViewDTO.setBody(recipe.getBody());
+            recipeViewDTO.setLikes(recipe.getLikes());
+            recipeViewDTO.setViews(recipe.getView());
+            recipeViewDTO.setCategory(recipe.getCategory());
+            recipeViewDTO.setTitle(recipe.getTitle());
+            recipeViewDTO.setTotalKcal(recipe.getCalorie());
+            recipeViewDTO.setBoardId(recipe.getBoardId());
+            if(recipe.getImages().size()!=0){
+                recipeViewDTO.setImgUrl(recipe.getImages().get(0).getImage_url());
+            }
+            recipeViewDTO.setCreatedAt(recipe.getCreatedAt());
+            recipeViewDTO.setTotalKcal(recipe.getCalorie());
+            recipeViewDTO.setTotalPrice(recipe.getPrice());
+            recipeViewDTO.setTotalTime(recipe.getCooking_time());
+            ArrayList<String> ingredients = new ArrayList<>();
+            List<RecipeIngredient> allByRecipeId = recipeIngredientRepository.findAllByRecipe_BoardId(recipe.getBoardId());
+
+            for (RecipeIngredient l : allByRecipeId) {
+                Optional<Ingredient> optionalIngredient = ingredientRepository.findById(l.getId());
+                if (optionalIngredient.isPresent()) {
+                    Ingredient ingredient = optionalIngredient.get();
+                    ingredients.add(ingredient.getName());
+                } else {
+                    throw new IllegalStateException();
+                }
+            }
+            recipeViewDTO.setIngredients(ingredients);
+
+            recipeViewDTOS.add(recipeViewDTO);
         }
-        return null;
+        return recipeViewDTOS;
+    }
+
+    /**
+     * 선택한 레시피 조회
+     */
+    @Transactional
+    public RecipeViewDTO getRecipe(Long id) {
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 아이디 입니다")
+        );
+        recipe.setView(recipe.getView()+1);
+        recipeRepository.save(recipe);
+
+
+        RecipeViewDTO recipeViewDTO = new RecipeViewDTO();
+        recipeViewDTO.setAuthor(recipe.getAuthor());
+        recipeViewDTO.setBody(recipe.getBody());
+        recipeViewDTO.setLikes(recipe.getLikes());
+        recipeViewDTO.setViews(recipe.getView());
+        recipeViewDTO.setCategory(recipe.getCategory());
+        recipeViewDTO.setTitle(recipe.getTitle());
+        recipeViewDTO.setTotalKcal(recipe.getCalorie());
+        recipeViewDTO.setBoardId(recipe.getBoardId());
+        if(recipe.getImages().size()!=0){
+            recipeViewDTO.setImgUrl(recipe.getImages().get(0).getImage_url());
+        }
+        recipeViewDTO.setCreatedAt(recipe.getCreatedAt());
+        recipeViewDTO.setTotalKcal(recipe.getCalorie());
+        recipeViewDTO.setTotalPrice(recipe.getPrice());
+        recipeViewDTO.setTotalTime(recipe.getCooking_time());
+        ArrayList<String> ingredients = new ArrayList<>();
+        List<RecipeIngredient> allByRecipeId = recipeIngredientRepository.findAllByRecipe_BoardId(recipe.getBoardId());
+
+        for (RecipeIngredient l : allByRecipeId) {
+            Optional<Ingredient> optionalIngredient = ingredientRepository.findById(l.getId());
+            if (optionalIngredient.isPresent()) {
+                Ingredient ingredient = optionalIngredient.get();
+                ingredients.add(ingredient.getName());
+            } else {
+                throw new IllegalStateException();
+            }
+        }
+        recipeViewDTO.setIngredients(ingredients);
+
+
+        return recipeViewDTO;
     }
 }
