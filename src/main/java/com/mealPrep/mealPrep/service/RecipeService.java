@@ -1,18 +1,16 @@
 package com.mealPrep.mealPrep.service;
 
-import com.mealPrep.mealPrep.domain.Ingredient;
-import com.mealPrep.mealPrep.domain.Member;
-import com.mealPrep.mealPrep.domain.Recipe;
-import com.mealPrep.mealPrep.domain.RecipeIngredient;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.mealPrep.mealPrep.domain.*;
 import com.mealPrep.mealPrep.dto.RecipeWriteRequestDTO;
-import com.mealPrep.mealPrep.repository.IngredientRepository;
-import com.mealPrep.mealPrep.repository.MemberRepository;
-import com.mealPrep.mealPrep.repository.RecipeIngredientRepository;
-import com.mealPrep.mealPrep.repository.RecipeRepository;
+import com.mealPrep.mealPrep.dto.RecipeWriteResponseDTO;
+import com.mealPrep.mealPrep.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +22,10 @@ public class RecipeService {
     private final IngredientRepository ingredientRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final MemberRepository memberRepository;
+    private final FirebaseService firebaseService;
+    private final ImageRepository imageRepository;
     @Transactional
-    public Long createRecipe(RecipeWriteRequestDTO request){
+    public RecipeWriteResponseDTO createRecipe(RecipeWriteRequestDTO request, MultipartFile file) throws IOException, FirebaseAuthException {
 
         List<Ingredient> ingredients = new ArrayList<>();
         for (String s : request.getIngredients()) {
@@ -34,6 +34,7 @@ public class RecipeService {
                     .build();
             ingredients.add(ingredient);
         }
+
         ingredientRepository.saveAll(ingredients);
 
         Member memberId = memberRepository.findOneByMemberId(request.getMemberId());
@@ -59,6 +60,21 @@ public class RecipeService {
             recipeIngredient.setIngredient(ingredient);
             recipeIngredientRepository.save(recipeIngredient);
         }
-        return recipe.getBoardId();
+
+        //Image 업로드
+        String imgUrl = firebaseService.uploadFiles(file,recipe.getBoardId().toString());
+        Image image = new Image();
+        image.setImage_url(imgUrl);
+        image.setId(recipe.getBoardId());
+        imageRepository.save(image);
+
+        RecipeWriteResponseDTO recipeWriteResponseDTO = RecipeWriteResponseDTO.builder()
+                .boardId(recipe.getBoardId())
+                .title(recipe.getTitle())
+                .body(recipe.getBody())
+                .imgUrl(imgUrl)
+                .createdAt(recipe.getCreatedAt())
+                .build();
+        return recipeWriteResponseDTO;
     }
 }
