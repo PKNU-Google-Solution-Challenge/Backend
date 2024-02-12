@@ -24,4 +24,11 @@ public class MemberRepository {
                 .getResultList();
     }
 
+    public Member findOneByMemberId(String memberId) {
+        String jpql = "select m from Member m where m.member_id = :memberId";
+        return em.createQuery(jpql, Member.class)
+                .setParameter("memberId", memberId)
+                .getSingleResult();
+    }
+
 }

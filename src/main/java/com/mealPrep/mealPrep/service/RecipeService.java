@@ -5,6 +5,7 @@ import com.mealPrep.mealPrep.domain.Recipe;
 import com.mealPrep.mealPrep.domain.RecipeIngredient;
 import com.mealPrep.mealPrep.dto.RecipeWriteRequestDTO;
 import com.mealPrep.mealPrep.repository.IngredientRepository;
+import com.mealPrep.mealPrep.repository.MemberRepository;
 import com.mealPrep.mealPrep.repository.RecipeIngredientRepository;
 import com.mealPrep.mealPrep.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,9 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
+    private final MemberRepository memberRepository;
     @Transactional
     public Long createRecipe(RecipeWriteRequestDTO request){
-
 
         List<Ingredient> ingredients = new ArrayList<>();
         for (String s : request.getIngredients()) {
@@ -34,15 +35,17 @@ public class RecipeService {
         }
         ingredientRepository.saveAll(ingredients);
 
+        String nickname = memberRepository.findOneByMemberId(request.getMemberId()).getNickname();
         Recipe recipe = new Recipe().builder()
                 .category(request.getCategory())
+                .author(nickname)
                 .price(request.getTotalPrice())
                 .calorie(request.getTotalKcal())
                 .cooking_time(request.getTotalTime())
                 .build();
+
         recipeRepository.save(recipe);
 
-//        recipeIngredientRepository.save(RecipeIngredient.builder().recipe(recipe).ingredient(ingredients.get(0)).build());
         // RecipeIngredient 엔티티 생성 및 저장
         for (Ingredient ingredient : ingredients) {
             RecipeIngredient recipeIngredient = new RecipeIngredient();

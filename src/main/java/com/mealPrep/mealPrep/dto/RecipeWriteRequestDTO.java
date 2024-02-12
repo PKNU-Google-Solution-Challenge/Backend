@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RecipeWriteRequestDTO {
     private Category category;
+    private String memberId;    //사용자 아이디
     private String title;
     private String body;
     private Long totalPrice;

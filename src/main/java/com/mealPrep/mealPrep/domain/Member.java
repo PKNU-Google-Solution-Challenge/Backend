@@ -28,10 +28,6 @@ public class Member extends BaseEntity {
     @Column(columnDefinition = "integer default 0")
     private Long reward;
 
-    @OneToMany
-    @JoinColumn(name = "board_id")
-    private List<Board> boards = new ArrayList<>();
-
     @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
     private List<Follow> followings;
 
