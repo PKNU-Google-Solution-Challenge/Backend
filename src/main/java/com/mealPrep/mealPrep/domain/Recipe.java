@@ -45,12 +45,5 @@ public class Recipe extends Board{
         this.setTitle(reviewRequestsDto.getTitle());
         this.setBody(reviewRequestsDto.getBody());
         this.setPrice(reviewRequestsDto.getTotalPrice());
-
-//        ArrayList<RecipeIngredient> ingredients1 = new ArrayList<>();
-//        for (String ingredient : reviewRequestsDto.getIngredients()) {
-//            RecipeIngredient ingredient1 = new RecipeIngredient();
-//            ingredients1.add(ingredient1);
-//        }
-//        this.setIngredients(ingredients1);
     }
 }
