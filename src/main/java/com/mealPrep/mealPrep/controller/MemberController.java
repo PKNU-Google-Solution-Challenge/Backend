@@ -1,4 +1,4 @@
-package com.mealPrep.mealPrep.Controller;
+package com.mealPrep.mealPrep.controller;
 
 import com.mealPrep.mealPrep.domain.Enum.UserState;
 import com.mealPrep.mealPrep.domain.Member;
@@ -14,14 +14,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
     @PostMapping("/sign-up")
     public ResponseEntity signUp(@Validated @RequestBody com.mealPrep.mealPrep.Controller.MemberForm form){
-
         Member member = new Member();
         member.setMember_id(form.getMember_id());
         member.setPassword(form.getPassword());

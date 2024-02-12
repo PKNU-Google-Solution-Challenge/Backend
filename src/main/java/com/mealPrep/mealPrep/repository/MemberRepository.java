@@ -18,10 +18,12 @@ public class MemberRepository {
 
     public void save(Member member) {em.persist(member);}
 
-    public List<Member> findByMemberId(String memberId) {
+
+    public Member findOneByMemberId(String memberId) {
         String jpql = "select m from Member m where m.member_id = :memberId";
         return em.createQuery(jpql, Member.class)
                 .setParameter("memberId", memberId)
-                .getResultList();
+                .getSingleResult();
     }
+
 }

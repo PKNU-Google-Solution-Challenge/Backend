@@ -21,17 +21,8 @@ public class RecipeController {
 
     @Operation(summary = "글 작성")
     @PostMapping("/recipe/write")
-    public ResponseEntity writeRecipe(@Validated @RequestBody RecipeWriteRequestDTO request){
-//        System.out.println("===========" + request.getIngredients());
-//        System.out.println("===========" + request.getTitle());
-//        System.out.println("===========" + request.getTotalTime());
-//
-//        Recipe recipe1 = new Recipe();
-//        recipe1.setCalorie(request.getTotalKcal());
-//
-//        System.out.println(recipe1.getCalorie());
-
-        Long recipes = recipeService.createRecipe(request);
-        return new ResponseEntity(Response.success(recipes), HttpStatus.OK);
+    public ResponseEntity writeRecipe(@Validated  @RequestBody RecipeWriteRequestDTO request){
+        Long recipe = recipeService.createRecipe(request);
+        return new ResponseEntity(Response.success(recipe), HttpStatus.OK);
     }
 }
