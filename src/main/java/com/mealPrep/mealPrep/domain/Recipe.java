@@ -38,4 +38,12 @@ public class Recipe extends Board{
     public Recipe() {
 
     }
+    public void update(RecipeWriteRequestDTO reviewRequestsDto){
+        this.setCategory(reviewRequestsDto.getCategory());
+        this.setCooking_time(reviewRequestsDto.getTotalTime());
+        this.setCalorie(reviewRequestsDto.getTotalKcal());
+        this.setTitle(reviewRequestsDto.getTitle());
+        this.setBody(reviewRequestsDto.getBody());
+        this.setPrice(reviewRequestsDto.getTotalPrice());
+    }
 }

@@ -30,6 +30,6 @@ public class Board extends BaseEntity {
     @Column(columnDefinition = "integer default 0")
     private Long likes;
 
-    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
-    private List<Image> images = new ArrayList<>();
+    @OneToOne(mappedBy = "boardId")
+    private Image images;
 }

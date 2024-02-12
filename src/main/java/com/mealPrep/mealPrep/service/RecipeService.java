@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -69,6 +70,7 @@ public class RecipeService {
             Image image = new Image();
             image.setImage_url(imgUrl);
             image.setId(recipe.getBoardId());
+            image.setBoardId(recipe);
             imageRepository.save(image);
 
             recipeWriteResponseDTO = RecipeWriteResponseDTO.builder()
@@ -95,7 +97,160 @@ public class RecipeService {
         for (Recipe recipe : orderByCreatedAtDesc) {
             RecipeViewDTO recipeViewDTO = new RecipeViewDTO();
             recipeViewDTO.setAuthor(recipe.getAuthor());
+            recipeViewDTO.setBody(recipe.getBody());
+            recipeViewDTO.setLikes(recipe.getLikes());
+            recipeViewDTO.setViews(recipe.getView());
+            recipeViewDTO.setCategory(recipe.getCategory());
+            recipeViewDTO.setTitle(recipe.getTitle());
+            recipeViewDTO.setTotalKcal(recipe.getCalorie());
+            recipeViewDTO.setBoardId(recipe.getBoardId());
+            if(recipe.getImages()!=null){
+                recipeViewDTO.setImgUrl(recipe.getImages().getImage_url());
+            }
+            recipeViewDTO.setCreatedAt(recipe.getCreatedAt());
+            recipeViewDTO.setTotalKcal(recipe.getCalorie());
+            recipeViewDTO.setTotalPrice(recipe.getPrice());
+            recipeViewDTO.setTotalTime(recipe.getCooking_time());
+            ArrayList<String> ingredients = new ArrayList<>();
+            List<RecipeIngredient> allByRecipeId = recipeIngredientRepository.findAllByRecipe_BoardId(recipe.getBoardId());
+
+            for (RecipeIngredient l : allByRecipeId) {
+                Optional<Ingredient> optionalIngredient = ingredientRepository.findById(l.getId());
+                if (optionalIngredient.isPresent()) {
+                    Ingredient ingredient = optionalIngredient.get();
+                    ingredients.add(ingredient.getName());
+                } else {
+                    throw new IllegalStateException();
+                }
+            }
+            recipeViewDTO.setIngredients(ingredients);
+
+            recipeViewDTOS.add(recipeViewDTO);
         }
-        return null;
+        return recipeViewDTOS;
+    }
+
+    /**
+     * 선택한 레시피 조회
+     */
+    @Transactional
+    public RecipeViewDTO getRecipe(Long id) {
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 아이디 입니다")
+        );
+        recipe.setView(recipe.getView()+1);
+        recipeRepository.save(recipe);
+
+
+        RecipeViewDTO recipeViewDTO = new RecipeViewDTO();
+        recipeViewDTO.setAuthor(recipe.getAuthor());
+        recipeViewDTO.setBody(recipe.getBody());
+        recipeViewDTO.setLikes(recipe.getLikes());
+        recipeViewDTO.setViews(recipe.getView());
+        recipeViewDTO.setCategory(recipe.getCategory());
+        recipeViewDTO.setTitle(recipe.getTitle());
+        recipeViewDTO.setTotalKcal(recipe.getCalorie());
+        recipeViewDTO.setBoardId(recipe.getBoardId());
+        if(recipe.getImages()!=null){
+            recipeViewDTO.setImgUrl(recipe.getImages().getImage_url());
+        }
+        recipeViewDTO.setCreatedAt(recipe.getCreatedAt());
+        recipeViewDTO.setTotalKcal(recipe.getCalorie());
+        recipeViewDTO.setTotalPrice(recipe.getPrice());
+        recipeViewDTO.setTotalTime(recipe.getCooking_time());
+        ArrayList<String> ingredients = new ArrayList<>();
+        List<RecipeIngredient> allByRecipeId = recipeIngredientRepository.findAllByRecipe_BoardId(recipe.getBoardId());
+
+        for (RecipeIngredient l : allByRecipeId) {
+            Optional<Ingredient> optionalIngredient = ingredientRepository.findById(l.getId());
+            if (optionalIngredient.isPresent()) {
+                Ingredient ingredient = optionalIngredient.get();
+                ingredients.add(ingredient.getName());
+            } else {
+                throw new IllegalStateException();
+            }
+        }
+        recipeViewDTO.setIngredients(ingredients);
+
+
+        return recipeViewDTO;
+    }
+
+    @Transactional
+    public RecipeWriteResponseDTO updateRecipe(Long id, RecipeWriteRequestDTO request, MultipartFile file) throws IOException, FirebaseAuthException{
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 게시물 입니다")
+        );
+        recipe.update(request);
+        String imgUrl = null;
+        //이미지 수정
+        if(file!=null){
+            imgUrl=firebaseService.uploadFiles(file, recipe.getBoardId().toString());
+            Optional<Image> byBoardId = imageRepository.findByBoardId(recipe);
+            if(byBoardId.isPresent()){
+                Image image = byBoardId.get();
+                image.setImage_url(imgUrl);
+            }
+        }
+        //재료 수정
+        List<RecipeIngredient> allByRecipeBoardId = recipeIngredientRepository.findAllByRecipe_BoardId(id);
+        for (RecipeIngredient recipeIngredient : allByRecipeBoardId) {
+            ingredientRepository.delete(recipeIngredient.getIngredient());
+        }
+        recipeIngredientRepository.deleteAll(allByRecipeBoardId);
+
+        List<Ingredient> ingredients = new ArrayList<>();
+        for (String s : request.getIngredients()) {
+            Ingredient ingredient = new Ingredient().builder()
+                    .name(s)
+                    .build();
+            ingredients.add(ingredient);
+        }
+        ingredientRepository.saveAll(ingredients);
+
+        for (Ingredient ingredient : ingredients) {
+            RecipeIngredient recipeIngredient = new RecipeIngredient();
+            recipeIngredient.setRecipe(recipe);
+            recipeIngredient.setIngredient(ingredient);
+            recipeIngredientRepository.save(recipeIngredient);
+        }
+        RecipeWriteResponseDTO recipeWriteResponseDTO;
+        if(file!=null) {
+            recipeWriteResponseDTO
+                    = RecipeWriteResponseDTO.builder()
+                    .boardId(recipe.getBoardId())
+                    .title(recipe.getTitle())
+                    .body(recipe.getBody())
+                    .imgUrl(imgUrl)
+                    .createdAt(recipe.getCreatedAt())
+                    .build();
+        }else{
+            recipeWriteResponseDTO
+                    = RecipeWriteResponseDTO.builder()
+                    .boardId(recipe.getBoardId())
+                    .title(recipe.getTitle())
+                    .body(recipe.getBody())
+                    .createdAt(recipe.getCreatedAt())
+                    .build();
+        }
+        return recipeWriteResponseDTO;
+    }
+
+    @Transactional
+    public Boolean deleteRecipe(Long id) {
+        List<RecipeIngredient> allByRecipeBoardId = recipeIngredientRepository.findAllByRecipe_BoardId(id);
+        for (RecipeIngredient recipeIngredient : allByRecipeBoardId) {
+            ingredientRepository.delete(recipeIngredient.getIngredient());
+        }
+        recipeIngredientRepository.deleteAll(allByRecipeBoardId);
+
+        Optional<Recipe> byId = recipeRepository.findById(id);
+        if(byId.isPresent()){
+            Recipe recipe = byId.get();
+            recipeRepository.delete(recipe);
+            imageRepository.deleteByBoardId(recipe);
+            return true;
+        }
+        return false;
     }
 }
