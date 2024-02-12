@@ -2,6 +2,7 @@ package com.mealPrep.mealPrep.service;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mealPrep.mealPrep.domain.*;
+import com.mealPrep.mealPrep.dto.RecipeViewDTO;
 import com.mealPrep.mealPrep.dto.RecipeWriteRequestDTO;
 import com.mealPrep.mealPrep.dto.RecipeWriteResponseDTO;
 import com.mealPrep.mealPrep.repository.*;
@@ -61,20 +62,40 @@ public class RecipeService {
             recipeIngredientRepository.save(recipeIngredient);
         }
 
+        RecipeWriteResponseDTO recipeWriteResponseDTO;
         //Image 업로드
-        String imgUrl = firebaseService.uploadFiles(file,recipe.getBoardId().toString());
-        Image image = new Image();
-        image.setImage_url(imgUrl);
-        image.setId(recipe.getBoardId());
-        imageRepository.save(image);
+        if(file!=null){
+            String imgUrl = firebaseService.uploadFiles(file,recipe.getBoardId().toString());
+            Image image = new Image();
+            image.setImage_url(imgUrl);
+            image.setId(recipe.getBoardId());
+            imageRepository.save(image);
 
-        RecipeWriteResponseDTO recipeWriteResponseDTO = RecipeWriteResponseDTO.builder()
-                .boardId(recipe.getBoardId())
-                .title(recipe.getTitle())
-                .body(recipe.getBody())
-                .imgUrl(imgUrl)
-                .createdAt(recipe.getCreatedAt())
-                .build();
+            recipeWriteResponseDTO = RecipeWriteResponseDTO.builder()
+                    .boardId(recipe.getBoardId())
+                    .title(recipe.getTitle())
+                    .body(recipe.getBody())
+                    .imgUrl(imgUrl)
+                    .createdAt(recipe.getCreatedAt())
+                    .build();
+        }else{
+            recipeWriteResponseDTO = RecipeWriteResponseDTO.builder()
+                    .boardId(recipe.getBoardId())
+                    .title(recipe.getTitle())
+                    .body(recipe.getBody())
+                    .createdAt(recipe.getCreatedAt())
+                    .build();
+        }
         return recipeWriteResponseDTO;
+    }
+    @Transactional
+    public List<RecipeViewDTO> getRecipes(){
+        List<Recipe> orderByCreatedAtDesc = recipeRepository.findAllByOrderByCreatedAtDesc();
+        ArrayList<RecipeViewDTO> recipeViewDTOS = new ArrayList<>();
+        for (Recipe recipe : orderByCreatedAtDesc) {
+            RecipeViewDTO recipeViewDTO = new RecipeViewDTO();
+            recipeViewDTO.setAuthor(recipe.getAuthor());
+        }
+        return null;
     }
 }
