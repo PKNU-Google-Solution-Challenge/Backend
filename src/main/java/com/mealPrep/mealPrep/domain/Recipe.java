@@ -23,7 +23,6 @@ public class Recipe extends Board{
     private Long price;
     private Long cooking_time;
     private Long calorie;
-    private String author;
 
     @OneToMany(mappedBy = "recipe",cascade = CascadeType.ALL)
     private List<RecipeIngredient> ingredients; // 이놈 굉장히 애매함 구조 잘 모르겠음
@@ -34,7 +33,6 @@ public class Recipe extends Board{
         this.price = price;
         this.cooking_time = cookingTime;
         this.calorie = calorie;
-        this.author = author;
     }
 
     public Recipe() {
