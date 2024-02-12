@@ -38,4 +38,19 @@ public class Recipe extends Board{
     public Recipe() {
 
     }
+    public void update(RecipeWriteRequestDTO reviewRequestsDto){
+        this.setCategory(reviewRequestsDto.getCategory());
+        this.setCooking_time(reviewRequestsDto.getTotalTime());
+        this.setCalorie(reviewRequestsDto.getTotalKcal());
+        this.setTitle(reviewRequestsDto.getTitle());
+        this.setBody(reviewRequestsDto.getBody());
+        this.setPrice(reviewRequestsDto.getTotalPrice());
+
+//        ArrayList<RecipeIngredient> ingredients1 = new ArrayList<>();
+//        for (String ingredient : reviewRequestsDto.getIngredients()) {
+//            RecipeIngredient ingredient1 = new RecipeIngredient();
+//            ingredients1.add(ingredient1);
+//        }
+//        this.setIngredients(ingredients1);
+    }
 }
