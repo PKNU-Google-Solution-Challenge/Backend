@@ -1,11 +1,10 @@
-package com.mealPrep.mealPrep.Controller;
+package com.mealPrep.mealPrep.controller;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mealPrep.mealPrep.common.Response;
 import com.mealPrep.mealPrep.dto.RecipeViewDTO;
 import com.mealPrep.mealPrep.dto.RecipeWriteRequestDTO;
 import com.mealPrep.mealPrep.dto.RecipeWriteResponseDTO;
-import com.mealPrep.mealPrep.service.FirebaseService;
 import com.mealPrep.mealPrep.service.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
