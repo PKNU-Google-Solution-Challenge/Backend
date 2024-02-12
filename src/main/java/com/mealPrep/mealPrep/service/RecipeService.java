@@ -36,6 +36,7 @@ public class RecipeService {
         ingredientRepository.saveAll(ingredients);
 
         String nickname = memberRepository.findOneByMemberId(request.getMemberId()).getNickname();
+
         Recipe recipe = new Recipe().builder()
                 .category(request.getCategory())
                 .author(nickname)
@@ -43,7 +44,6 @@ public class RecipeService {
                 .calorie(request.getTotalKcal())
                 .cooking_time(request.getTotalTime())
                 .build();
-
         recipeRepository.save(recipe);
 
         // RecipeIngredient 엔티티 생성 및 저장
