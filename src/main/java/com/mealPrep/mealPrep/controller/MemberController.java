@@ -14,13 +14,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class MemberController {
 
     private final MemberService memberService;
     @PostMapping("/sign-up")
-    public ResponseEntity signUp(@Validated @RequestBody com.mealPrep.mealPrep.Controller.MemberForm form){
+    public ResponseEntity signUp(@Validated @RequestBody MemberForm form){
 
         Member member = new Member();
         member.setMember_id(form.getMember_id());
