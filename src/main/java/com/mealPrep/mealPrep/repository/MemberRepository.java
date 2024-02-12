@@ -4,6 +4,7 @@ import com.mealPrep.mealPrep.domain.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -30,5 +31,4 @@ public class MemberRepository {
                 .setParameter("memberId", memberId)
                 .getSingleResult();
     }
-
 }

@@ -1,4 +1,4 @@
-package com.mealPrep.mealPrep.controller;
+package com.mealPrep.mealPrep.Controller;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mealPrep.mealPrep.common.Response;

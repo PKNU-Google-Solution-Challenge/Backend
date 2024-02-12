@@ -1,6 +1,6 @@
 package com.mealPrep.mealPrep.service;
 
-import com.mealPrep.mealPrep.controller.LoginForm;
+import com.mealPrep.mealPrep.Controller.LoginForm;
 import com.mealPrep.mealPrep.domain.Member;
 import com.mealPrep.mealPrep.exception.BusinessLogicException;
 import com.mealPrep.mealPrep.exception.ExceptionCode;
