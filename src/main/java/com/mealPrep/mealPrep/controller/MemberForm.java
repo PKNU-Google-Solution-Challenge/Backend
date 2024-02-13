@@ -1,4 +1,4 @@
-package com.mealPrep.mealPrep.Controller;
+package com.mealPrep.mealPrep.controller;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
