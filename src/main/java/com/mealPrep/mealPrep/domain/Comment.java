@@ -23,7 +23,7 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "board_id")
-    private Board board;
+    private Board boardId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

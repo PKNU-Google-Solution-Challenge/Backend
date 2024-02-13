@@ -25,4 +25,5 @@ public class RecipeViewDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern="yyyy-MM-dd")
     private LocalDateTime createdAt;
     List<String> ingredients;
+    List<CommentResponseDTO> comments;
 }
