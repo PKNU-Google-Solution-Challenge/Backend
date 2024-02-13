@@ -3,15 +3,13 @@ package com.mealPrep.mealPrep.domain;
 import com.mealPrep.mealPrep.domain.Enum.CommentStates;
 import com.mealPrep.mealPrep.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity
 public class Comment extends BaseEntity {
     @Id
@@ -23,7 +21,7 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "board_id")
-    private Board board;
+    private Board boardId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

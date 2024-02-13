@@ -2,6 +2,7 @@ package com.mealPrep.mealPrep.service;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mealPrep.mealPrep.domain.*;
+import com.mealPrep.mealPrep.dto.CommentResponseDTO;
 import com.mealPrep.mealPrep.dto.RecipeViewDTO;
 import com.mealPrep.mealPrep.dto.RecipeWriteRequestDTO;
 import com.mealPrep.mealPrep.dto.RecipeWriteResponseDTO;
@@ -20,12 +21,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RecipeService {
-    private final RecipeRepository recipeRepository;
+    private final BoardRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final MemberRepository memberRepository;
     private final FirebaseService firebaseService;
     private final ImageRepository imageRepository;
+    private final CommentRepository commentRepository;
     @Transactional
     public RecipeWriteResponseDTO createRecipe(RecipeWriteRequestDTO request, MultipartFile file) throws IOException, FirebaseAuthException {
 
@@ -115,7 +117,7 @@ public class RecipeService {
             List<RecipeIngredient> allByRecipeId = recipeIngredientRepository.findAllByRecipe_BoardId(recipe.getBoardId());
 
             for (RecipeIngredient l : allByRecipeId) {
-                Optional<Ingredient> optionalIngredient = ingredientRepository.findById(l.getId());
+                Optional<Ingredient> optionalIngredient = ingredientRepository.findById(l.getIngredient().getId());
                 if (optionalIngredient.isPresent()) {
                     Ingredient ingredient = optionalIngredient.get();
                     ingredients.add(ingredient.getName());
@@ -141,7 +143,6 @@ public class RecipeService {
         recipe.setView(recipe.getView()+1);
         recipeRepository.save(recipe);
 
-
         RecipeViewDTO recipeViewDTO = new RecipeViewDTO();
         recipeViewDTO.setAuthor(recipe.getAuthor());
         recipeViewDTO.setBody(recipe.getBody());
@@ -162,7 +163,7 @@ public class RecipeService {
         List<RecipeIngredient> allByRecipeId = recipeIngredientRepository.findAllByRecipe_BoardId(recipe.getBoardId());
 
         for (RecipeIngredient l : allByRecipeId) {
-            Optional<Ingredient> optionalIngredient = ingredientRepository.findById(l.getId());
+            Optional<Ingredient> optionalIngredient = ingredientRepository.findById(l.getIngredient().getId());
             if (optionalIngredient.isPresent()) {
                 Ingredient ingredient = optionalIngredient.get();
                 ingredients.add(ingredient.getName());
@@ -172,7 +173,25 @@ public class RecipeService {
         }
         recipeViewDTO.setIngredients(ingredients);
 
-
+        List<CommentResponseDTO> commentResponseDTOS = new ArrayList<>();
+        List<Comment> comments = commentRepository.findAllByBoardId(recipe);
+        for (Comment comment : comments) {
+            CommentResponseDTO commentResponse = CommentResponseDTO.builder()
+                    .commentId(comment.getId())
+                    .nickname(recipe.getMember().getNickname())
+                    .boardId(comment.getBoardId().getBoardId())
+                    .status(comment.getCommentState())
+                    .ref(comment.getRef())
+                    .refOrder(comment.getRefOrder())
+                    .step(comment.getStep())
+                    .answerNum(comment.getAnswerNumber())
+                    .parentNum(comment.getParentNum())
+                    .comment(comment.getComment())
+                    .createdAt(comment.getCreatedAt())
+                    .build();
+            commentResponseDTOS.add(commentResponse);
+        }
+        recipeViewDTO.setComments(commentResponseDTOS);
         return recipeViewDTO;
     }
 
@@ -249,6 +268,8 @@ public class RecipeService {
             Recipe recipe = byId.get();
             recipeRepository.delete(recipe);
             imageRepository.deleteByBoardId(recipe);
+            List<Comment> comments = commentRepository.findAllByBoardId(recipe);
+            commentRepository.deleteAll(comments);
             return true;
         }
         return false;
