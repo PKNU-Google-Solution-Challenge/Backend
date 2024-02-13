@@ -1,5 +1,7 @@
 package com.mealPrep.mealPrep.repository;
 
+import com.mealPrep.mealPrep.domain.Comment;
+import com.mealPrep.mealPrep.domain.Image;
 import com.mealPrep.mealPrep.domain.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -11,24 +13,24 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
-public class MemberRepository {
+public interface MemberRepository extends JpaRepository<Member,Long> {
 
-    private final EntityManager em;
+      Member findOneByMemberId(String memberId);
+      Member findOneByUserId(Long userId);
 
-    public void save(Member member) {em.persist(member);}
-
-    public List<Member> findByMemberId(String memberId) {
-        String jpql = "select m from Member m where m.member_id = :memberId";
-        return em.createQuery(jpql, Member.class)
-                .setParameter("memberId", memberId)
-                .getResultList();
-    }
-
-    public Member findOneByMemberId(String memberId) {
-        String jpql = "select m from Member m where m.member_id = :memberId";
-        return em.createQuery(jpql, Member.class)
-                .setParameter("memberId", memberId)
-                .getSingleResult();
-    }
+//    public void save(Member member) {em.persist(member);}
+//
+//    public List<Member> findByMemberId(String memberId) {
+//        String jpql = "select m from Member m where m.member_id = :memberId";
+//        return em.createQuery(jpql, Member.class)
+//                .setParameter("memberId", memberId)
+//                .getResultList();
+//    }
+//
+//    public Member findOneByMemberId(String memberId) {
+//        String jpql = "select m from Member m where m.member_id = :memberId";
+//        return em.createQuery(jpql, Member.class)
+//                .setParameter("memberId", memberId)
+//                .getSingleResult();
+//    }
 }

@@ -46,4 +46,16 @@ public class MemberController {
         }
     }
 
+    @PutMapping("/edit-member/{memberId}")
+    public ResponseEntity editMember(@Validated @RequestBody MemberForm form, @PathVariable Long userId){
+        ResponseEntity response = memberService.editMember(form, userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/suspension/{memberId}")
+    public ResponseEntity suspendMember(@Validated @PathVariable Long userId){
+        ResponseEntity response = memberService.suspendMember(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }
