@@ -6,6 +6,7 @@ import com.mealPrep.mealPrep.domain.Board;
 import com.mealPrep.mealPrep.domain.Comment;
 import com.mealPrep.mealPrep.domain.Member;
 import com.mealPrep.mealPrep.dto.CommentResponseDTO;
+import com.mealPrep.mealPrep.dto.CommentUpdateRequestDTO;
 import com.mealPrep.mealPrep.repository.CommentRepository;
 import com.mealPrep.mealPrep.repository.BoardRepository;
 import com.mealPrep.mealPrep.repository.MemberRepository;
@@ -65,6 +66,18 @@ public class CommentService {
         if(byId.isPresent()){
             Comment comment = byId.get();
             commentRepository.delete(comment);
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public Boolean updateComment(Long commentId, CommentUpdateRequestDTO request) {
+        Optional<Comment> byId = commentRepository.findById(commentId);
+        if(byId.isPresent()){
+            Comment comment = byId.get();
+            comment.setComment(request.getComment());
+            comment.setCommentState(request.getStatus());
             return true;
         }
         return false;
