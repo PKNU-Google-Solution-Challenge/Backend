@@ -27,6 +27,16 @@ public class CommentController {
             return new ResponseEntity(Response.failure(), HttpStatus.BAD_REQUEST);
         }
     }
+    @Operation(summary = "대댓글 달기")
+    @PostMapping("/comment/{boardId}/{parentId}")
+    public ResponseEntity createComment(@PathVariable Long boardId,@PathVariable Long parentId, @RequestBody CommentRequestDTO request){
+        try{
+            CommentResponseDTO comment = commentService.createRecomment(parentId, boardId, request);
+            return new ResponseEntity(Response.success(comment),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(Response.failure(), HttpStatus.BAD_REQUEST);
+        }
+    }
     @Operation(summary = "댓글 삭제")
     @GetMapping("/comment/{commentId}")
     public ResponseEntity deleteComment(@PathVariable Long commentId){

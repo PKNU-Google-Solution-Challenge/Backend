@@ -13,7 +13,7 @@ public class FireBaseConfig {
     public void initFirebase() {
         try {
             FileInputStream serviceAccount =
-//                    new FileInputStream("/home/ubuntu/app/key/serviceAccountKey.json");
+//                    new FileInputStream("/home/ubuntu/mealPrepServiceAccountKey.json");
                     new FileInputStream("src/main/resources/mealPrepServiceAccountKey.json");
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))

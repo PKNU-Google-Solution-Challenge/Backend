@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class CommentRequestDTO {
-    private Long answerNum;
-    private Long parentNum;
+//    private Long parentNum;
     private String memberId;
-    private Long ref;
-    private Long refOrder;
-    private Long step;
+//    private Long ref;
+//    private Long refOrder;
+//    private Long step;
     private CommentStates status;
     private String comment; //댓글 내용
 }
