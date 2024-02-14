@@ -94,6 +94,7 @@ public class CommentService {
             Long reCommentStep = parentComment.getStep()+1L;
 
             List<Comment> allByRef = commentRepository.findAllByRef(parentComment.getRef());    //부모 댓글의 그룹 댓글 리스트
+
             Long childAnswerNum=0L;
             Long maxStep = Long.MIN_VALUE;
             for (Comment comment1 : allByRef) {
@@ -105,11 +106,29 @@ public class CommentService {
 
             Long refOrder =0L;
             if(reCommentStep>maxStep){
-
+                //저장할 대댓글의 step이 댓글의 그룹내에서 최대 step보다 크다면
+                //부모댓글의 그룹내의 순서보다 큰 refOrder는 모두 +1 더해줍니다.
+                List<Comment> comments = commentRepository.findAllByBoardIdAndRefOrderIsGreaterThan(board,parentComment.getRefOrder());
+                for (Comment comment1 : comments) {
+                    refOrder+=refOrder+1L;
+                    comment1.setRefOrder(comment1.getRefOrder()+1L);
+                    commentRepository.save(comment1);
+                }
+                refOrder= refOrder+1L;
             }else if(maxStep == reCommentStep){
-
+                //저장할 대댓글의 step이 댓글의 그룹내에서 최대 step 같다면
+                //부모댓글의 그룹내의 순서와 자식댓글을 더한값 보다 큰 refOrder는 모두 +1 컬럼을 업데이트
+                List<Comment> allByBoardIdAndRefOrderIsGreaterThan = commentRepository.findAllByBoardIdAndRefOrderIsGreaterThan(board, parentComment.getRefOrder() + parentComment.getAnswerNumber());
+                for (Comment comment1 : allByBoardIdAndRefOrderIsGreaterThan) {
+                    comment1.setRefOrder(comment1.getRefOrder()+1L);
+                    commentRepository.save(comment1);
+                }
+                refOrder = refOrder + childAnswerNum + 1L;
             }else{
-
+                //저장할 대댓글의 step이 댓글의 그룹내에서 최대 step보다 작다면
+                //이 그룹내의 합산한 자식수의 댓글에 +1 을하여 refOrder가 정해집니다.
+                //refOrder는 answerNumSum + 1L;
+                refOrder = childAnswerNum + 1L;
             }
 
             comment = Comment.builder()
@@ -120,15 +139,11 @@ public class CommentService {
                     .step(reCommentStep)
                     .parentNum(parentComment.getId())
                     .ref(parentComment.getRef())
-                    .refOrder(1L)
+                    .refOrder(refOrder)
                     .answerNumber(0L)
                     .build();
             //부모댓글 answerNum +1씩
-            while(parentComment.getParentNum()!=0){
-                Comment foundComment = commentRepository.findOneById(parentComment.getParentNum());
-                foundComment.setAnswerNumber(foundComment.getAnswerNumber()+1L);
-                parentComment=foundComment;
-            }
+           parentComment.setAnswerNumber(parentComment.getAnswerNumber()+1L);
         }
         commentRepository.save(comment);
 
