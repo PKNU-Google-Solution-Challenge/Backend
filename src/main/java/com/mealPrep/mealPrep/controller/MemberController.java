@@ -20,7 +20,7 @@ public class MemberController {
     public ResponseEntity signUp(@Validated @RequestBody MemberForm form){
 
         Member member = new Member();
-        member.setMember_id(form.getMember_id());
+        member.setMemberId(form.getMember_id());
         member.setPassword(form.getPassword());
         member.setBelong(form.getBelong());
         member.setE_mail(form.getE_mail());
@@ -46,14 +46,14 @@ public class MemberController {
         }
     }
 
-    @PutMapping("/edit-member/{memberId}")
-    public ResponseEntity editMember(@Validated @RequestBody MemberForm form, @PathVariable Long userId){
+    @PutMapping("/edit-member/{userId}")
+    public ResponseEntity editMember(@Validated @RequestBody MemberForm form, @PathVariable(value = "userId") Long userId){
         ResponseEntity response = memberService.editMember(form, userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/suspension/{memberId}")
-    public ResponseEntity suspendMember(@Validated @PathVariable Long userId){
+    @PutMapping("/suspension/{userId}")
+    public ResponseEntity suspendMember(@Validated @PathVariable(value = "userId") Long userId){
         ResponseEntity response = memberService.suspendMember(userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

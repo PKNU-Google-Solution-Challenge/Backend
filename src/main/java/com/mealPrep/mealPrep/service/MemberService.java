@@ -28,8 +28,8 @@ public class MemberService {
     }
 
     private ResponseEntity validateDuplicateMember(Member member) {
-        List<Member> findMembers = (List<Member>) memberRepository.findOneByMemberId(member.getMember_id());
-        if (!findMembers.isEmpty()) {
+        Member findMembers = (Member) memberRepository.findOneByMemberId(member.getMemberId());
+        if (findMembers != null) {
             throw new BusinessLogicException(ExceptionCode.ALREADY_MEMBER_EXIST);
         }
         return ResponseEntity.ok("Duplication successful");
@@ -46,7 +46,7 @@ public class MemberService {
 
         // 로그인 성공에 대한 로직 추가 예정
 
-        return member.getUser_id();
+        return member.getUserId();
     }
 
     @Transactional

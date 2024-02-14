@@ -137,7 +137,7 @@ public class RecipeService {
      */
     @Transactional
     public RecipeViewDTO getRecipe(Long id) {
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(
+        Recipe recipe = (Recipe) recipeRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 아이디 입니다")
         );
         recipe.setView(recipe.getView()+1);
@@ -197,7 +197,7 @@ public class RecipeService {
 
     @Transactional
     public RecipeWriteResponseDTO updateRecipe(Long id, RecipeWriteRequestDTO request, MultipartFile file) throws IOException, FirebaseAuthException{
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(
+        Recipe recipe = (Recipe) recipeRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물 입니다")
         );
         recipe.update(request);
@@ -263,9 +263,9 @@ public class RecipeService {
         }
         recipeIngredientRepository.deleteAll(allByRecipeBoardId);
 
-        Optional<Recipe> byId = recipeRepository.findById(id);
+        Optional<Board> byId = recipeRepository.findById(id);
         if(byId.isPresent()){
-            Recipe recipe = byId.get();
+            Recipe recipe = (Recipe) byId.get();
             recipeRepository.delete(recipe);
             imageRepository.deleteByBoardId(recipe);
             List<Comment> comments = commentRepository.findAllByBoardId(recipe);
