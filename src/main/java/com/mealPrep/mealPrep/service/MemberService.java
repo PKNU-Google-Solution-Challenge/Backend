@@ -37,7 +37,7 @@ public class MemberService {
 
 
     @Transactional
-    public ResponseEntity login(LoginForm loginForm) {
+    public Long login(LoginForm loginForm) {
         Member member = memberRepository.findOneByMemberId(loginForm.getMember_id());
 
          if (member == null || !member.getPassword().equals(loginForm.getPassword())) {
@@ -46,7 +46,7 @@ public class MemberService {
 
         // 로그인 성공에 대한 로직 추가 예정
 
-        return ResponseEntity.ok("Login successful");
+        return member.getUser_id();
     }
 
     @Transactional

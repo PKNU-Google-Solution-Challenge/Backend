@@ -39,8 +39,8 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity login(@Validated @RequestBody LoginForm loginForm) {
         try {
-            ResponseEntity response = memberService.login(loginForm);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            Long loginUserId = memberService.login(loginForm);
+            return new ResponseEntity<>(loginUserId, HttpStatus.OK);
         } catch (BusinessLogicException e) {
             return new ResponseEntity<>(e.getExceptionCode(), HttpStatus.BAD_REQUEST);
         }
