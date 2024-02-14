@@ -39,11 +39,23 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity login(@Validated @RequestBody LoginForm loginForm) {
         try {
-            ResponseEntity response = memberService.login(loginForm);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            Long loginUserId = memberService.login(loginForm);
+            return new ResponseEntity<>(loginUserId, HttpStatus.OK);
         } catch (BusinessLogicException e) {
             return new ResponseEntity<>(e.getExceptionCode(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PutMapping("/edit-member/{memberId}")
+    public ResponseEntity editMember(@Validated @RequestBody MemberForm form, @PathVariable Long userId){
+        ResponseEntity response = memberService.editMember(form, userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/suspension/{memberId}")
+    public ResponseEntity suspendMember(@Validated @PathVariable Long userId){
+        ResponseEntity response = memberService.suspendMember(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

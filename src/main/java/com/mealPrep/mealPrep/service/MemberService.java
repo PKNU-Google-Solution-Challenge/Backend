@@ -1,6 +1,8 @@
 package com.mealPrep.mealPrep.service;
 
 import com.mealPrep.mealPrep.controller.LoginForm;
+import com.mealPrep.mealPrep.controller.MemberForm;
+import com.mealPrep.mealPrep.domain.Enum.UserState;
 import com.mealPrep.mealPrep.domain.Member;
 import com.mealPrep.mealPrep.exception.BusinessLogicException;
 import com.mealPrep.mealPrep.exception.ExceptionCode;
@@ -26,7 +28,7 @@ public class MemberService {
     }
 
     private ResponseEntity validateDuplicateMember(Member member) {
-        List<Member> findMembers = (List<Member>) memberRepository.findByMemberId(member.getMember_id());
+        List<Member> findMembers = (List<Member>) memberRepository.findOneByMemberId(member.getMember_id());
         if (!findMembers.isEmpty()) {
             throw new BusinessLogicException(ExceptionCode.ALREADY_MEMBER_EXIST);
         }
@@ -35,15 +37,31 @@ public class MemberService {
 
 
     @Transactional
-    public ResponseEntity login(LoginForm loginForm) {
-        List<Member> members = memberRepository.findByMemberId(loginForm.getMember_id());
+    public Long login(LoginForm loginForm) {
+        Member member = memberRepository.findOneByMemberId(loginForm.getMember_id());
 
-        if (members.isEmpty() || !members.get(0).getPassword().equals(loginForm.getPassword())) {
+         if (member == null || !member.getPassword().equals(loginForm.getPassword())) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_MATCH);
         }
 
         // 로그인 성공에 대한 로직 추가 예정
 
-        return ResponseEntity.ok("Login successful");
+        return member.getUser_id();
+    }
+
+    @Transactional
+    public ResponseEntity editMember(MemberForm form, Long userId){
+        Member findMember = memberRepository.findOneByUserId(userId);
+        findMember.setBelong(form.getBelong());
+        findMember.setRegion(form.getRegion());
+        findMember.setNickname(form.getNickname());
+        findMember.setE_mail(form.getE_mail());
+        return ResponseEntity.ok("Update successful");
+    }
+
+    public ResponseEntity suspendMember(Long userId) {
+        Member findMember = memberRepository.findOneByUserId(userId);
+        findMember.setStatus(UserState.deactivate);
+        return ResponseEntity.ok("Stop this account");
     }
 }
