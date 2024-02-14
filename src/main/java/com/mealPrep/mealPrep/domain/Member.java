@@ -15,10 +15,10 @@ import java.util.List;
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long user_id;
+    @Column(name = "userId")
+    private Long userId;
 
-    private String member_id;
+    private String memberId;
     private String password;
     private String nickname;
     private String e_mail;
