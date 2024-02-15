@@ -40,7 +40,6 @@ public class CommunityService {
         community.setTitle(request.getTitle());
         communityRepository.save(community);
 
-        firebaseService.uploadFiles(file,community.getBoardId().toString());
 
         CommunityResponseDTO communityResponseDTO;
 
