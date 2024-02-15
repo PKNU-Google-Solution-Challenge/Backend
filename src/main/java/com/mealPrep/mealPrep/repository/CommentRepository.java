@@ -14,4 +14,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByRefOrder(Long refOrder);
     Comment findOneById(Long id);
     List<Comment> findAllByRef(Long ref);
+
+    //부모댓글의 그룹내의 순서보다 큰 refOrder는 모두 +1 더해줍니다.
+    List<Comment> findAllByBoardIdAndRefOrderIsGreaterThan(Board boardId,Long parentCommentRefOrder);
 }
