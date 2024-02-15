@@ -2,6 +2,7 @@ package com.mealPrep.mealPrep.controller;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mealPrep.mealPrep.common.Response;
+import com.mealPrep.mealPrep.dto.RecipeFindResponseDTO;
 import com.mealPrep.mealPrep.dto.RecipeViewDTO;
 import com.mealPrep.mealPrep.dto.RecipeWriteRequestDTO;
 import com.mealPrep.mealPrep.dto.RecipeWriteResponseDTO;
@@ -72,6 +73,16 @@ public class RecipeController {
         try{
             Boolean b = recipeService.deleteRecipe(id);
             return new ResponseEntity(Response.success(b),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(Response.failure(),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @Operation(summary = "작성한 레시피 확인")
+    @GetMapping("/recipe/member/{id}")
+    public ResponseEntity findRecipe(@PathVariable Long id){
+        try{
+            List<RecipeFindResponseDTO> response = recipeService.findRecipeByMemberId(id);
+            return new ResponseEntity(Response.success(response),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity(Response.failure(),HttpStatus.BAD_REQUEST);
         }

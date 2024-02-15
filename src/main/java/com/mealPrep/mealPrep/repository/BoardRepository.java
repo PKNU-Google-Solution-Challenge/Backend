@@ -2,11 +2,13 @@ package com.mealPrep.mealPrep.repository;
 
 import com.mealPrep.mealPrep.domain.Board;
 import com.mealPrep.mealPrep.domain.Enum.Category;
+import com.mealPrep.mealPrep.domain.Member;
 import com.mealPrep.mealPrep.domain.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board,Long> {
@@ -14,5 +16,7 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     List<Recipe> findAllByOrderByCreatedAtDesc();
     Board findByBoardId(Long boardId);
     List<Recipe> findRecipesByCategory(Category category);
+
+    List<Recipe> findAllByMember(Member member);
 }
 

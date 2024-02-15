@@ -2,10 +2,7 @@ package com.mealPrep.mealPrep.service;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mealPrep.mealPrep.domain.*;
-import com.mealPrep.mealPrep.dto.CommentResponseDTO;
-import com.mealPrep.mealPrep.dto.RecipeViewDTO;
-import com.mealPrep.mealPrep.dto.RecipeWriteRequestDTO;
-import com.mealPrep.mealPrep.dto.RecipeWriteResponseDTO;
+import com.mealPrep.mealPrep.dto.*;
 import com.mealPrep.mealPrep.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -273,5 +271,25 @@ public class RecipeService {
             return true;
         }
         return false;
+    }
+
+    public List<RecipeFindResponseDTO> findRecipeByMemberId(Long id) {
+        Optional<Member> byId = memberRepository.findById(id);
+        ArrayList<RecipeFindResponseDTO> recipeFindResponseDTOS = new ArrayList<>();
+        if(byId.isPresent()){
+            Member member = byId.get();
+            List<Recipe> recipes = recipeRepository.findAllByMember(member);
+            for (Recipe recipe : recipes) {
+                RecipeFindResponseDTO response = RecipeFindResponseDTO.builder()
+                        .view(recipe.getView())
+                        .author(member.getNickname())
+                        .time(recipe.getCreatedAt())
+                        .recipeId(recipe.getBoardId())
+                        .title(recipe.getTitle())
+                        .build();
+                recipeFindResponseDTOS.add(response);
+            }
+        }
+        return recipeFindResponseDTOS;
     }
 }

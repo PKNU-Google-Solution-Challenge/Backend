@@ -7,14 +7,15 @@ import com.mealPrep.mealPrep.domain.Comment;
 import com.mealPrep.mealPrep.domain.Member;
 import com.mealPrep.mealPrep.dto.CommentResponseDTO;
 import com.mealPrep.mealPrep.dto.CommentUpdateRequestDTO;
+import com.mealPrep.mealPrep.dto.RecipeFindResponseDTO;
 import com.mealPrep.mealPrep.repository.CommentRepository;
 import com.mealPrep.mealPrep.repository.BoardRepository;
 import com.mealPrep.mealPrep.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -189,5 +190,26 @@ public class CommentService {
             return true;
         }
         return false;
+    }
+
+    public List<RecipeFindResponseDTO> findComments(Long memberId) {
+        Optional<Member> byId = memberRepository.findById(memberId);
+        ArrayList<RecipeFindResponseDTO> responses = new ArrayList<RecipeFindResponseDTO>();
+        if(byId.isPresent()){
+            Member member = byId.get();
+            List<Comment> allComments = commentRepository.findAllByMember(member);
+            for (Comment comment : allComments) {
+                Board boardId = comment.getBoardId();
+                RecipeFindResponseDTO response = RecipeFindResponseDTO.builder()
+                        .view(boardId.getView())
+                        .title(boardId.getTitle())
+                        .recipeId(boardId.getBoardId())
+                        .time(boardId.getCreatedAt())
+                        .author(boardId.getAuthor())
+                        .build();
+                responses.add(response);
+            }
+        }
+        return responses;
     }
 }

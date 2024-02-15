@@ -5,12 +5,15 @@ import com.mealPrep.mealPrep.domain.Comment;
 import com.mealPrep.mealPrep.dto.CommentRequestDTO;
 import com.mealPrep.mealPrep.dto.CommentResponseDTO;
 import com.mealPrep.mealPrep.dto.CommentUpdateRequestDTO;
+import com.mealPrep.mealPrep.dto.RecipeFindResponseDTO;
 import com.mealPrep.mealPrep.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -53,6 +56,16 @@ public class CommentController {
         try{
             Boolean comment = commentService.updateComment(commentId,request);
             return new ResponseEntity(Response.success(comment),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(Response.failure(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @Operation(summary = "작성 댓글 확인")
+    @GetMapping("/comment/profile/{id}")
+    public ResponseEntity findComment(@PathVariable Long id){
+        try{
+            List<RecipeFindResponseDTO> response= commentService.findComments(id);
+            return new ResponseEntity(Response.success(response),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity(Response.failure(), HttpStatus.BAD_REQUEST);
         }
