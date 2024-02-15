@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 public class CommunityRequestDto {
     private String title;
     private String body;
-    private String author;
+//    private String author;
     private String memberId;
 }
