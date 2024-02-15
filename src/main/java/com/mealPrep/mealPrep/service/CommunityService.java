@@ -37,7 +37,7 @@ public class CommunityService {
         community.setLikes(0L);
         community.setView(0L);
         community.setBody(request.getBody());
-        community.setTitle(request.getAuthor());
+        community.setTitle(request.getTitle());
         communityRepository.save(community);
 
         firebaseService.uploadFiles(file,community.getBoardId().toString());
