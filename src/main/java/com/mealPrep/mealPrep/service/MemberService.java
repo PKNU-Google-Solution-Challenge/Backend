@@ -23,6 +23,7 @@ public class MemberService {
     @Transactional
     public ResponseEntity join(Member member){
         validateDuplicateMember(member); //중복 회원 검증
+        member.setReward(0L);
         memberRepository.save(member);
         return ResponseEntity.ok("join successful");
     }

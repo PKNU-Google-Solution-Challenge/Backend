@@ -32,14 +32,15 @@ public class CommunityService {
         Member findMember = memberRepository.findOneByMemberId(request.getMemberId());
 
         Community community = new Community();
-        community.setAuthor(request.getAuthor());
+        community.setAuthor(findMember.getNickname());
         community.setMember(findMember);
         community.setLikes(0L);
         community.setView(0L);
         community.setBody(request.getBody());
         community.setTitle(request.getAuthor());
-
         communityRepository.save(community);
+
+        firebaseService.uploadFiles(file,community.getBoardId().toString());
 
         CommunityResponseDTO communityResponseDTO;
 
