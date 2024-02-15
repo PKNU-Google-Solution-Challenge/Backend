@@ -1,18 +1,20 @@
 package com.mealPrep.mealPrep.domain;
 
+import com.mealPrep.mealPrep.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Getter
-public class BookMark {
+@Setter
+public class BookMark extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bookmark_id")
     private Long id;
 
-    private String userId;
+    private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
@@ -21,8 +23,8 @@ public class BookMark {
     public BookMark() {
     }
 
-    public BookMark(String userId, Board board) {
-        this.userId = userId;
+    public BookMark(Long userId, Board board) {
+        this.memberId = userId;
         this.board = board;
     }
 }
