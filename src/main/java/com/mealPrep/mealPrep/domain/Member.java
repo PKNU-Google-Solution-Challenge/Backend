@@ -28,10 +28,10 @@ public class Member extends BaseEntity {
     @Column(columnDefinition = "integer default 0")
     private Long reward;
 
-    @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "fromUser", fetch = FetchType.EAGER)
     private List<Follow> followings;
 
-    @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "toUser", fetch = FetchType.EAGER)
     private List<Follow> followers;
 
     @Enumerated(EnumType.STRING)
