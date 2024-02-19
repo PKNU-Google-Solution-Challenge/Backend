@@ -65,4 +65,9 @@ public class MemberService {
         findMember.setStatus(UserState.deactivate);
         return ResponseEntity.ok("Stop this account");
     }
+
+    public ResponseEntity information(Long userId) {
+        Member findMember = memberRepository.findOneByUserId(userId);
+        return ResponseEntity.ok(findMember);
+    }
 }
