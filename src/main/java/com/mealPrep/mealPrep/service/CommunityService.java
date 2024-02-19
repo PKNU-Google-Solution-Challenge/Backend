@@ -31,7 +31,7 @@ public class CommunityService {
     @Transactional
     public CommunityResponseDTO createCommunity(CommunityRequestDTO request, MultipartFile file) throws IOException, FirebaseAuthException {
         Member findMember = memberRepository.findOneByMemberId(request.getMemberId());
-
+        findMember.setReward(findMember.getReward()+10L);
         Community community = new Community();
         community.setAuthor(findMember.getNickname());
         community.setMember(findMember);

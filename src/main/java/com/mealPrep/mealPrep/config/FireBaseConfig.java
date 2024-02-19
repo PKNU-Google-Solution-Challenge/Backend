@@ -17,7 +17,7 @@ public class FireBaseConfig {
                     new FileInputStream("src/main/resources/mealPrepServiceAccountKey.json");
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://friend-327a9.appspot.com")
+                    .setDatabaseUrl("https://mealprep-b96e0.appspot.com")
                     .build();
             FirebaseApp.initializeApp(options);
 

@@ -33,6 +33,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDTO createComment(Long boardId, CommentRequestDTO request){
         Member memberId = memberRepository.findOneByMemberId(request.getMemberId());
+        memberId.setReward(memberId.getReward()+10L);   //댓글 달면 10p씩
         Board board = boardRepository.findByBoardId(boardId);
 
         List<Comment> comments = commentRepository.findAllByBoardId(board);

@@ -40,7 +40,7 @@ public class RecipeService {
         ingredientRepository.saveAll(ingredients);
 
         Member memberId = memberRepository.findOneByMemberId(request.getMemberId());
-
+        memberId.setReward(memberId.getReward()+10L);
         Recipe recipe = new Recipe();
         recipe.setCategory(request.getCategory()); // category 필드에 대한 setter 메서드를 호출하여 값을 설정합니다.
         recipe.setPrice(request.getTotalPrice());
