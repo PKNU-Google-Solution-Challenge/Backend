@@ -18,3 +18,11 @@ spring:
     open-in-view: false
 app:
   firebase-bucket: mealprep-b96e0.appspot.com
+
+server:
+  port: 443
+  ssl:
+    enabled: true
+    key-store-password: Choi100~
+    key-store-type: PKCS12
+    key-store: /home/ubuntu/FriendKeystore.p12
