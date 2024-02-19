@@ -58,4 +58,9 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/information/{userId}")
+    public ResponseEntity information(@Validated @PathVariable(value = "userId") Long userId){
+        ResponseEntity response = memberService.information(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
